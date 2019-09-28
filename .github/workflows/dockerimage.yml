@@ -16,5 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+    - uses: azure/container-actions/docker-login@master
+      with:
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
     - name: Build the Docker image
       run: docker build -t tkp1n/node-ci:$(date +%y%m%d) -t tkp1n/node-ci:latest .
+    - name: Push the Docker image
+      if: github.event_name == 'pull_request'
+      run: docker push tkp1n/node-ci:latest
