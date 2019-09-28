@@ -27,9 +27,9 @@ jobs:
       run: docker build -t tkp1n/node-ci:$(date +%y%m%d) -t tkp1n/node-ci:latest .
     - name: Test demo project
       run: |
-        pushd node-ci-demo
+        cd node-ci-demo
         npm install
-        docker run --cap-add=SYS_ADMIN -v `pwd`/node-ci-demo:/app tkp1n/node-ci:latest npm run ci-test
+        docker run --cap-add=SYS_ADMIN -v `pwd`:/app tkp1n/node-ci:latest npm run ci-test
     - name: Push the Docker image
       if: github.event_name != 'pull_request'
       run: docker push tkp1n/node-ci:latest
