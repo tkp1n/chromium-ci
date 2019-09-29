@@ -1,14 +1,6 @@
 name: Docker Image CI
 
-on: 
-  push:
-    branches:
-    - master
-  pull_request:
-    branches:
-    - master
-  schedule:
-  - cron: 0 0 * * 6
+on: [push, pull_request]
 
 jobs:
 
@@ -20,16 +12,8 @@ jobs:
       with:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '10.x'
     - name: Build the Docker image
       run: docker build -t tkp1n/node-ci:$(date +%y%m%d) -t tkp1n/node-ci:latest .
-    - name: Test demo project
-      run: |
-        cd node-ci-demo
-        npm install
-        docker run --cap-add=SYS_ADMIN -v `pwd`:/app tkp1n/node-ci:latest npm run ci-test
     - name: Push the Docker image
       if: github.event_name != 'pull_request'
       run: docker push tkp1n/node-ci:latest
