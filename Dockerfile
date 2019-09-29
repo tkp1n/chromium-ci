@@ -1,26 +1,17 @@
 # chromium > 76 is required. For now, this is only available in the 'edge' build
 FROM alpine:edge
 
-# Install chromium, some dependnecies, 
+# Install chromium, some dependnecies, node and dumb-init
 RUN apk add --no-cache \
       chromium nss freetype freetype-dev harfbuzz ca-certificates ttf-freefont \
       nodejs npm \
       dumb-init
 
-# Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-
-# Install Puppeteer globally
-RUN npm i -g puppeteer && npm cache clean --force
-
 # Add user so we don't need --no-sandbox.
-RUN addgroup -S pptruser && adduser -S -g pptruser pptruser \
-    && mkdir -p /home/pptruser/Downloads /app \
-    && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser /app
+RUN addgroup -S chromium && adduser -S -g chromium chromium
 
 # Run everything after as non-privileged user.
-USER pptruser
+USER chromium
 
 # Set CHROME_BIN to avoid tweaking config files (e.g. karma.conf.js)
 ENV CHROME_BIN=/usr/bin/chromium-browser
