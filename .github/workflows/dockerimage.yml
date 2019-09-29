@@ -18,7 +18,7 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - name: Build the Docker image
-      run: docker build -t tkp1n/node-ci:$(date +%y%m%d) -t tkp1n/node-ci:latest .
+      run: docker build -t tkp1n/chromium:$(date +%y%m%d) -t tkp1n/chromium:latest .
     - name: Push the Docker image
       if: github.event_name != 'pull_request'
-      run: docker push tkp1n/node-ci:latest
+      run: docker push tkp1n/chromium:latest
