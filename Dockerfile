@@ -8,7 +8,10 @@ RUN apk add --no-cache \
       dumb-init
 
 # Add user so we don't need --no-sandbox.
-RUN addgroup -S chromium && adduser -S -g chromium chromium
+RUN addgroup -S chromium &&\
+    adduser -S -g chromium chromium &&\
+    mkdir /app &&\
+    chown -R chromium:chromium /app
 
 # Run everything after as non-privileged user.
 USER chromium
